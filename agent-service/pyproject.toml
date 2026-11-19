@@ -1,0 +1,35 @@
+[project]
+name = "solstice-agents"
+version = "0.1.0"
+description = "Solstice Hotel Group agent service (Google ADK + Gemma 4 E2B)"
+requires-python = ">=3.13,<3.14"
+dependencies = [
+    "fastapi>=0.162.5",
+    "google-adk>=2.14.1",
+    "hvac>=2.4.0",
+    "litellm>=1.109.1",
+    "psycopg-pool>=3.3.3",
+    "psycopg[binary]>=3.3.9",
+    "pydantic-settings>=2.16.3",
+    "sse-starlette>=3.7.0",
+    "uvicorn[standard]>=0.54.0",
+]
+
+[project.scripts]
+solstice-api = "solstice_agents.api:run"
+solstice-migrate = "solstice_agents.migrate:main"
+
+[tool.pytest.ini_options]
+asyncio_mode = "auto"
+testpaths = ["tests"]
+
+[build-system]
+requires = ["uv_build>=0.11.32,<0.12.0"]
+build-backend = "uv_build"
+
+[dependency-groups]
+dev = [
+    "httpx>=0.28.1",
+    "pytest>=9.2.0",
+    "pytest-asyncio>=1.5.0",
+]

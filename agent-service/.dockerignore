@@ -1,0 +1,8 @@
+# Used only if agent-service/ itself is the build context. The Terraform build uses the
+# repo root as context, governed by /.dockerignore.
+.venv
+__pycache__
+*.pyc
+.pytest_cache
+.env
+.env.*

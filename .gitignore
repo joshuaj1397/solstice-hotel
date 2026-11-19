@@ -1,0 +1,31 @@
+# Secrets and local env
+.env
+.env.*
+**/.env
+**/.env.*
+*.pem
+*.key
+.claude/settings.local.json
+
+# Python
+**/.venv/
+**/__pycache__/
+*.pyc
+**/.pytest_cache/
+
+# Node / Next.js
+**/node_modules/
+**/.next/
+*.tsbuildinfo
+
+# Terraform (state holds generated secrets: Vault root token, DB admin password)
+**/.terraform/
+*.tfstate
+*.tfstate.*
+*.tfplan
+crash.log
+
+# OS / editor
+.DS_Store
+Thumbs.db
+*.log

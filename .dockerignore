@@ -1,0 +1,16 @@
+# Build context for agent-service/Dockerfile is the repo root (it needs agents/, db/, solstice-data/).
+**/.git
+**/.venv
+**/__pycache__
+**/*.pyc
+**/.pytest_cache
+**/.env
+**/.env.*
+**/node_modules
+**/.next
+web/
+infra/
+**/*.tfstate*
+**/.terraform
+*.pdf
+agents/transcripts/

@@ -1,0 +1,7 @@
+# Local Terraform state contains generated secrets (Vault root token, DB admin password).
+**/.terraform/
+*.tfstate
+*.tfstate.*
+crash.log
+*.tfplan
+# Keep provider lock files (.terraform.lock.hcl) committed.
