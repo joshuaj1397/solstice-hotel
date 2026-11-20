@@ -37,6 +37,9 @@ flowchart LR
 ./infra/up.sh            # or .\infra\up.ps1 on Windows
 ```
 
+On macOS the containers use the host's Ollama (Docker Desktop has no GPU passthrough), so run
+`ollama pull gemma4:e2b` first. See [GPU notes](infra/README.md#gpu-notes).
+
 Open http://localhost:3000. Staff passcode:
 
 ```bash

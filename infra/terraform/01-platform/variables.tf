@@ -1,7 +1,7 @@
 variable "docker_host" {
-  description = "Docker daemon endpoint. Docker Desktop on Windows: npipe:////./pipe/dockerDesktopLinuxEngine; Linux/macOS: unix:///var/run/docker.sock"
+  description = "Docker daemon endpoint, e.g. npipe:////./pipe/dockerDesktopLinuxEngine (Docker Desktop, Windows), unix://$HOME/.docker/run/docker.sock (Docker Desktop, macOS), unix:///var/run/docker.sock (Linux). Null = DOCKER_HOST or the provider default; the up/down scripts pass the active docker context's endpoint."
   type        = string
-  default     = "npipe:////./pipe/dockerDesktopLinuxEngine"
+  default     = null
 }
 
 variable "project" {
@@ -51,9 +51,9 @@ variable "ollama_image" {
 }
 
 variable "ollama_models_dir" {
-  description = "Host directory holding the Ollama model cache (mounted read-only)."
+  description = "Host directory holding the Ollama model cache (mounted read-only). Empty = ~/.ollama/models."
   type        = string
-  default     = "C:/Users/joshu/.ollama/models"
+  default     = ""
 }
 
 variable "ollama_context_length" {

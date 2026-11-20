@@ -40,8 +40,8 @@ Override any variable with `TF_VAR_*`:
 | `TF_VAR_enable_web` | `true` | 2 | Build and run the Next.js container |
 | `TF_VAR_vault_port` | `8200` | 1 | Vault API/UI on 127.0.0.1 |
 | `TF_VAR_ollama_mode` | auto | 1 | `container` (GPU) or `host`. The up scripts auto-detect GPU support |
-| `TF_VAR_ollama_models_dir` | `C:/Users/joshu/.ollama/models` | 1 | Host model cache, mounted read-only into the Ollama container |
-| `TF_VAR_docker_host` | `npipe:////./pipe/dockerDesktopLinuxEngine` | 1+2 | Use `unix:///var/run/docker.sock` on Linux/macOS |
+| `TF_VAR_ollama_models_dir` | `~/.ollama/models` | 1 | Host model cache, mounted read-only into the Ollama container |
+| `TF_VAR_docker_host` | auto | 1+2 | Docker endpoint. The up/down scripts use the active `docker context` (Windows named pipe, `~/.docker/run/docker.sock` on macOS, `/var/run/docker.sock` on Linux) |
 | `TF_VAR_db_cred_ttl_seconds` | `3600` | 2 | Lease TTL of Vault-issued Postgres users |
 
 Example on non-default ports, which is how the stack was verified:
@@ -120,7 +120,9 @@ Verified: the agent-service AppRole gets `403 Forbidden` reading `secret/solstic
 | `sslmode=disable` on the private Docker network | TLS to Postgres (Cloud SQL / RDS) with verified certificates |
 | Ports bound to 127.0.0.1 | Private networking, an internal load balancer for the agent service, the web app behind a WAF/CDN |
 
-## GPU note (this machine)
+## GPU notes
+
+**Windows (the original dev machine).**
 
 `ollama_mode=container` passes the NVIDIA GPU into the Ollama container (`gpus = "all"`). On
 Windows that requires **Docker Desktop's WSL2 backend** plus the NVIDIA driver. This machine runs Docker
@@ -129,6 +131,11 @@ Desktop on the **Hyper-V backend**, where `docker run --gpus all` fails with
 detect this and fall back to `ollama_mode=host`: containers reach the host's GPU-backed
 Ollama at `host.docker.internal:11434`. To use the containerized Ollama, switch Docker Desktop to
 the WSL2 engine (Settings → General → "Use the WSL 2 based engine"), then re-run `up`.
+
+**macOS (Apple Silicon, Docker Desktop).** Docker Desktop on macOS has no GPU passthrough, so
+`up.sh` goes straight to `ollama_mode=host` and the containers use the host's Ollama, which runs
+the model on Metal. Run `ollama pull gemma4:e2b` once beforehand. Docker Desktop's socket is
+`~/.docker/run/docker.sock` (not `/var/run/docker.sock`); the scripts pick it up from `docker context`.
 
 ## Troubleshooting
 

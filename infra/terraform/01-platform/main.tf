@@ -17,6 +17,8 @@ provider "docker" {
 
 locals {
   labels = { "com.solstice.stack" = var.project, "com.solstice.stage" = "platform" }
+  # Forward slashes so a Windows home (C:\Users\...) stays a valid Docker bind-mount path.
+  ollama_models_dir = var.ollama_models_dir != "" ? var.ollama_models_dir : replace(pathexpand("~/.ollama/models"), "\\", "/")
 }
 
 # --- secrets generated once, handed to Vault in stage 2 ---------------------------------
@@ -143,7 +145,7 @@ resource "docker_container" "ollama" {
     "OLLAMA_CONTEXT_LENGTH=${var.ollama_context_length}",
   ]
   volumes {
-    host_path      = var.ollama_models_dir
+    host_path      = local.ollama_models_dir
     container_path = "/root/.ollama/models"
     read_only      = true
   }

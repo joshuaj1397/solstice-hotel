@@ -8,10 +8,21 @@
 set -euo pipefail
 here="$(cd "$(dirname "$0")" && pwd)"
 
+# Talk to the same Docker engine as the docker CLI (Docker Desktop's named pipe on Windows,
+# ~/.docker/run/docker.sock on macOS, /var/run/docker.sock on Linux), unless the caller chose.
+if [[ -z "${TF_VAR_docker_host:-}" ]]; then
+  docker_host="$(docker context inspect --format '{{.Endpoints.docker.Host}}' 2>/dev/null || true)"
+  if [[ -n "$docker_host" ]]; then export TF_VAR_docker_host="$docker_host"; fi
+fi
+
 # Ollama-in-a-container needs Docker GPU support (Docker Desktop WSL2 backend + NVIDIA driver).
 # Fall back to the host's Ollama when it isn't available, unless the caller chose explicitly.
 if [[ -z "${TF_VAR_ollama_mode:-}" ]]; then
-  if docker run --rm --gpus all busybox true >/dev/null 2>&1; then
+  if [[ "$(uname -s)" == Darwin ]]; then
+    # Docker Desktop on macOS has no GPU passthrough; the host's Ollama runs the model on Metal.
+    echo "==> macOS: using host Ollama (TF_VAR_ollama_mode=host). Needs: ollama pull ${TF_VAR_model:-gemma4:e2b}" >&2
+    export TF_VAR_ollama_mode=host
+  elif docker run --rm --gpus all busybox true >/dev/null 2>&1; then
     export TF_VAR_ollama_mode=container
   else
     echo "!! Docker GPU passthrough unavailable -> using host Ollama (TF_VAR_ollama_mode=host)" >&2

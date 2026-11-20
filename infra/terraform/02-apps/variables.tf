@@ -1,7 +1,7 @@
 variable "docker_host" {
-  description = "Docker daemon endpoint (must match stage 1)."
+  description = "Docker daemon endpoint (must match stage 1). Null = DOCKER_HOST or the provider default."
   type        = string
-  default     = "npipe:////./pipe/dockerDesktopLinuxEngine"
+  default     = null
 }
 
 variable "agent_port" {

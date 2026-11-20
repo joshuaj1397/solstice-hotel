@@ -3,6 +3,12 @@
 $ErrorActionPreference = "Stop"
 $here = Split-Path -Parent $MyInvocation.MyCommand.Path
 
+# Talk to the same Docker engine as the docker CLI, unless the caller chose explicitly.
+if (-not $env:TF_VAR_docker_host) {
+    $dockerHost = docker context inspect --format '{{.Endpoints.docker.Host}}'
+    if ($LASTEXITCODE -eq 0 -and $dockerHost) { $env:TF_VAR_docker_host = "$dockerHost".Trim() }
+}
+
 if (-not $env:TF_VAR_ollama_mode) {
     docker run --rm --gpus all busybox true *> $null
     if ($LASTEXITCODE -eq 0) {
