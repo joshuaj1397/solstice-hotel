@@ -25,6 +25,9 @@
 *.tfplan
 crash.log
 
+# Challenge sample data: supplied separately, never committed (see README "Quick start")
+solstice-data/
+
 # OS / editor
 .DS_Store
 Thumbs.db

@@ -31,6 +31,23 @@ flowchart LR
 
 ## Quick start
 
+**First, add the sample data.** The sample data provided with the challenge is not in this
+repository. Before you run anything, copy the four sample files into `solstice-data/` at the repo
+root. The folder is gitignored, so the files stay local.
+
+```
+solstice-data/
+  solstice-properties.csv
+  solstice-guest-profiles.csv
+  solstice-group-inquiries.csv                            # its notes column is the answer key the tests check
+  SOLSTICE HOTEL GROUP — FRONT DESK POLICY REFERENCE.md   # any *POLICY*.md file name works
+```
+
+Everything depends on these files. The agent image copies them in at build time, `solstice-migrate`
+seeds Postgres from them, and the tests check results against them. Without them, `up.sh` fails
+while building the agent image. For local dev without Docker you can set `SOLSTICE_DATA_DIR` to a
+folder somewhere else, but the Docker build only looks in `solstice-data/`.
+
 **Everything in Docker (Terraform):**
 
 ```bash
@@ -100,5 +117,5 @@ db/migrations/   roles · core · ops (inventory, holds, cases) · agent surface
 web/             Next.js 16 (App Router, Cache Components) · Tailwind v4 · BFF route handlers
 infra/           Terraform (Docker provider): 01-platform (PG, Vault, Ollama) · 02-apps (Vault config, apps)
 docs/            architecture, latency, integration, assumptions, ADRs, screenshots
-solstice-data/   the provided sample exports (read-only inputs)
+solstice-data/   the provided sample exports (not in the repo; add them yourself, see Quick start)
 ```
